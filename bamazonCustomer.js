@@ -41,18 +41,42 @@ function fetchList() {
     }
   ]).then(function(response) { 
     // Matching user selection to item in db 
-     var query = "SELECT product_name FROM products WHERE ?";
+     var query = "SELECT stock_quantity, product_name FROM products WHERE ?";
       connection.query(query, { id: response.item }, function(err, res) {
-        for (var i = 0; i < res.length; i++) {
-          console.log(res[i].product_name);
+        
+          for (var i = 0; i < res.length; i++) {
+            // console.log(res[i].stock_quantity);
+            var stockQ = res[i].stock_quantity;
+            // console.log(stockQ);
+            // console.log(res[i].product_name);
+            // if (response.quantity <= response.stock_quantity) {
+            // console.log("This didn't break");
+          // }
         }
+        // console.log(stockQ);
+        // console.log(response.quantity)
+        if (response.quantity <= stockQ) {
+          console.log("We have some in stock!");
+          var stockQuery = "UPDATE products SET stock_quantity = stock_quantity -" +response.quantity + " WHERE ?";
+            connection.query(stockQuery, {id: response.item}, function(err, res) {
+            fetchList();
+          })
+        }
+            
+        else if (response.quantity > stockQ) {
+          console.log("Womp womp!");
+        }
+
       });    
     })
   })
 }
 
 
-   
+   // var query = "SELECT stock_quantity FROM products WHERE ?";
+   // connection.query(query, {product_name = response.item}, function(err, res) { 
+
+   // })
 
 // function selectItem() {
   
