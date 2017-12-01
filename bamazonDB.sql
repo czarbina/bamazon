@@ -27,3 +27,4 @@ VALUES ("LA Kings Socks", "Clothing", 5.99, 10),
 ("Dill Pickles", "Food and Drink", 4.00, 50);
 
 SELECT * FROM products ORDER BY id;
+

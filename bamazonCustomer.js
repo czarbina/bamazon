@@ -41,47 +41,67 @@ function fetchList() {
     }
   ]).then(function(response) { 
     // Matching user selection to item in db 
-     var query = "SELECT stock_quantity, product_name FROM products WHERE ?";
+     var query = "SELECT stock_quantity, product_name, price FROM products WHERE ?";
       connection.query(query, { id: response.item }, function(err, res) {
         
           for (var i = 0; i < res.length; i++) {
             // console.log(res[i].stock_quantity);
             var stockQ = res[i].stock_quantity;
+            var item = res[i].product_name;
+            var price = res[i].price;
             // console.log(stockQ);
             // console.log(res[i].product_name);
-            // if (response.quantity <= response.stock_quantity) {
-            // console.log("This didn't break");
-          // }
-        }
-        // console.log(stockQ);
-        // console.log(response.quantity)
+          }
+        
         if (response.quantity <= stockQ) {
-          console.log("We have some in stock!");
+          
           var stockQuery = "UPDATE products SET stock_quantity = stock_quantity -" +response.quantity + " WHERE ?";
             connection.query(stockQuery, {id: response.item}, function(err, res) {
-            fetchList();
-          })
-        }
+            // console.log("Congrats! " + response.quantity + " " + item + " " + "coming your way!");
+            // console.log("Total cost: $" + (price * response.quantity));
+          });
+
+            console.log("\nCongrats! " + response.quantity + " " + item + " " + "coming your way!");
+            console.log("Total cost: $" + (price * response.quantity) + "\n");  
+
+            inquirer.prompt ([
+            {
+              type: "confirm",
+              message: "Would you like to make another purchase?",
+              name: "decision"
+            }
+            ]).then(function(response) {
+              // console.log(response.decision);
+                if (response.decision === true) {
+                  fetchList();
+              }
+                else if (response.decision === false) {
+                  console.log("Thanks for shopping!");
+                  connection.end();
+                }
+              })
+            }    
             
         else if (response.quantity > stockQ) {
-          console.log("Womp womp!");
-        }
+          inquirer.prompt ([
+            {
+              type: "confirm",
+              message: "Womp womp - we don't have that many! Would you like to keep shopping?",
+              name: "decision"
+            }
+            ]).then(function(response) {
+               if (response.decision === true) {
+                  fetchList();
+              }
+                else if (response.decision === false) {
+                  console.log("Thanks for shopping!");
+                  connection.end();
+                }
+            })
+          }
+        });    
+      });
+    });
+  };
 
-      });    
-    })
-  })
-}
 
-
-   // var query = "SELECT stock_quantity FROM products WHERE ?";
-   // connection.query(query, {product_name = response.item}, function(err, res) { 
-
-   // })
-
-// function selectItem() {
-  
-//  }
-
-  
-
-  // connection.end();
