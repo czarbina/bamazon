@@ -35,7 +35,7 @@ If the amount the user wants can be fulfilled by the number of items in stock th
 
 If the amount the user wants cannot be fulfilled by the number of items in stock the purchase will be unsuccessful. The user will then be given the option to either keep shopping or end the program..
 
-That's it! Have fun!
+That's it! Have fun!!
 
 
 
